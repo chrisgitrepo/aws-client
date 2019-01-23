@@ -15,5 +15,12 @@
   "dependencies": {
     "aws-sdk": "2.392.0",
     "ramda": "0.26.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrisgitrepo/aws-client.git"
+  },
+  "bugs": {
+      "url": "https://github.com/chrisgitrepo/aws-client/issues"
   }
 }
