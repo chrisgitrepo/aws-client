@@ -16,7 +16,7 @@ class SNSClient {
     }
 
     const data = await new Promise(resolve => {
-      return sns.publish(params, (err, data) => {
+      return this.snsClient.publish(params, (err, data) => {
         if (err) console.error(err, err.stack)
         else resolve(data)           // successful response
       })
