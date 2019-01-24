@@ -12,7 +12,7 @@ class SNSClient {
   async publish({ message }) {
     const params = {
       Message: message,
-      TopicArn: topicArn
+      TopicArn: this.topicArn
     }
 
     const data = await new Promise(resolve => {

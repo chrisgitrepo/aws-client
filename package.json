@@ -1,6 +1,6 @@
 {
   "name": "aws-client",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Minimalist Node.js client for AWS services",
   "main": "./src/index.js",
   "files": [
