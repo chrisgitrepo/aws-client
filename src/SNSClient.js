@@ -9,7 +9,7 @@ class SNSClient {
       this.topicArn = topicArn
     }
 
-  static async publish({ message }) {
+  async publish({ message }) {
     const params = {
       Message: message,
       TopicArn: topicArn
