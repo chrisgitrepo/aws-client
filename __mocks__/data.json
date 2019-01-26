@@ -1,0 +1,11 @@
+{
+  "Key": {
+    "id": "mock-id"
+  },
+  "get": {
+    "Item": "mocked-get-response"
+  },
+  "error": {
+    "stack": "mocked-error"
+  }
+}

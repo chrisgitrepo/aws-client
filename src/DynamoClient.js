@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk')
 const R = require('ramda')
 
-const errorMessage = ({ err, method, item }) => `ERROR in DynamoClient ${method}\nStack: ${err.stack}\nItem(s): ${JSON.stringify(item)}`
+const errorMessage = require('./utils/error')
 
 class DynamoClient {
   
@@ -20,8 +20,8 @@ class DynamoClient {
     }
 
     const data = await new Promise(resolve => {
-      return this.docClient.get(params, (err, data) => {
-        if (err) console.error(errorMessage({ err, method: 'get', item: id })) // an error occurred
+      return this.docClient.get(params, (error, data) => {
+        if (error) resolve(errorMessage({ source: DynamoClient.name, error, method: 'get', item: id }))
         resolve(data.Item)
       })
     })
@@ -41,8 +41,8 @@ class DynamoClient {
         }
       }
       const response = await new Promise(resolve => {
-        return this.docClient.batchGet(params, (err, data) => {
-          if (err) console.error(errorMessage({ err, method: 'batchGet', item: ids }))
+        return this.docClient.batchGet(params, (error, data) => {
+          if (error) resolve(errorMessage({ source: DynamoClient.name, error, method: 'batchGet', item: ids }))
           else resolve(data.Responses[this.tableName])
         })
       })
@@ -58,8 +58,8 @@ class DynamoClient {
       Item: item
     }
     const data = await new Promise(resolve => {
-      return this.docClient.put(params, (err, data) => {
-        if (err) console.error(errorMessage({ err, method: 'put', item })) // an error occurred
+      return this.docClient.put(params, (error, data) => {
+        if (error) console.error(errorMessage({ source: DynamoClient.name, error, method: 'put', item })) // an error occurred
         resolve(data)
       })
     })
@@ -81,8 +81,8 @@ class DynamoClient {
           ))
         }
       }
-      await this.docClient.batchWrite(params, (err, data) => {
-        if (err) console.error(errorMessage({ err, method: 'batchPut', item: data })) // an error occurred
+      await this.docClient.batchWrite(params, (error, data) => {
+        if (error) console.error(errorMessage({ source: DynamoClient.name, error, method: 'batchPut', item: data })) // an error occurred
         return data
       })
     }
@@ -99,8 +99,8 @@ class DynamoClient {
     }
 
     const data = await new Promise(resolve => {
-      return this.docClient.query(params, (err, data) => {
-        if (err) console.log(err)
+      return this.docClient.query(params, (error, data) => {
+        if (error) console.log(error)
         else resolve(data.Items)
       })
     })
