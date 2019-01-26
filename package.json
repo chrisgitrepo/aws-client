@@ -10,12 +10,21 @@
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
-  "keywords": [],
+  "keywords": [
+    "aws",
+    "client",
+    "api",
+    "dynamo",
+    "sns"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "2.392.0",
     "ramda": "0.26.1"
+  },
+  "devDependencies": {
+    "jest": "^24.0.0"
   },
   "repository": {
     "type": "git",
@@ -23,8 +32,5 @@
   },
   "bugs": {
     "url": "https://github.com/chrisgitrepo/aws-client/issues"
-  },
-  "devDependencies": {
-    "jest": "^24.0.0"
   }
 }
