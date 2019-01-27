@@ -66,7 +66,7 @@ class DynamoClient {
     return data
   }
 
-  async batchPut({ data }) {
+  async batchPut({ items }) {
     const chunkedData = R.splitEvery(25, data)
 
     for (const chunk of chunkedData) {
@@ -81,10 +81,13 @@ class DynamoClient {
           ))
         }
       }
-      await this.docClient.batchWrite(params, (error, data) => {
-        if (error) console.error(errorMessage({ source: DynamoClient.name, error, method: 'batchPut', item: data })) // an error occurred
-        return data
+      const data = await new Promise(resolve => {
+        return this.docClient.batchWrite(params, (error, data) => {
+          if (error) console.error(errorMessage({ source: DynamoClient.name, error, method: 'batchPut', items })) // an error occurred
+          resolve(data)
+        })
       })
+      return data
     }
   }
 
