@@ -67,7 +67,7 @@ class DynamoClient {
   }
 
   async batchPut({ items }) {
-    const chunkedData = R.splitEvery(25, data)
+    const chunkedData = R.splitEvery(25, items)
 
     for (const chunk of chunkedData) {
       const params = {
