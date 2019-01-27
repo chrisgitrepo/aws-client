@@ -1,13 +1,19 @@
 const AWS = require('aws-sdk')
 
 class SNSClient {
+
   constructor({ region, topicArn }) {
     this.snsClient = new AWS.SNS({
       region,
       apiVersion: '2010-03-31'
     })
-      this.topicArn = topicArn
-    }
+    this.topicArn = topicArn
+  }
+
+  static extractMessage(event) {
+    const { Records: [{ Sns: { Message } }] } = event
+    return JSON.parse(Message)
+  }
 
   async publish({ message }) {
     const params = {

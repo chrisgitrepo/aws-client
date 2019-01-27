@@ -1,6 +1,6 @@
 {
   "name": "aws-client",
-  "version": "1.0.10",
+  "version": "1.1.0",
   "description": "Minimalist Node.js client for AWS services",
   "main": "./src/index.js",
   "files": [
@@ -17,7 +17,7 @@
     "dynamo",
     "sns"
   ],
-  "author": "",
+  "author": "Chris Sarmiento",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "2.392.0",
@@ -30,6 +30,7 @@
     "type": "git",
     "url": "https://github.com/chrisgitrepo/aws-client.git"
   },
+  "homepage": "https://github.com/chrisgitrepo/aws-client#readme",
   "bugs": {
     "url": "https://github.com/chrisgitrepo/aws-client/issues"
   }
