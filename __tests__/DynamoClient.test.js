@@ -19,7 +19,7 @@ describe(testSuite, () => {
       const { get: { Item }, Key: { id } } = data
       const dynamoClient = new DynamoClient({ region, tableName })
   
-      return dynamoClient.get({ id }).then((data) => {
+      return dynamoClient.get({ id }).then(data => {
         expect(data).toBe(Item)
       })
     })
@@ -29,8 +29,19 @@ describe(testSuite, () => {
       const expected = errorMessage({ source: testSuite, error: data.error, method: 'get', item: id })
       const dynamoClient = new DynamoClient({ region, tableName })
   
-      return dynamoClient.get({ id }).then((data) => {
+      return dynamoClient.get({ id }).then(data => {
         expect(data).toBe(expected)
+      })
+    })
+  })
+
+  describe('batchGet', () => {
+    test('should batchGet data from aws-sdk', () => {
+      const { batchGet: { Items }, keys } = data
+      const dynamoClient = new DynamoClient({ region, tableName })
+  
+      return dynamoClient.batchGet({ keyName: 'id', keys }).then(data => {
+        expect(data).toEqual(Items)
       })
     })
   })

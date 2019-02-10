@@ -28,8 +28,9 @@ class DynamoClient {
     return data
   }
 
-  async batchGet({ ids }) {
-    const chunkedIds = R.splitEvery(100, ids)
+  async batchGet({ keyName, keys }) {
+    const formattedIds = keys.map(key => ({ [keyName]: key }))
+    const chunkedIds = R.splitEvery(100, formattedIds)
 
     const data = []
     for (const chunk of chunkedIds) {

@@ -2,8 +2,12 @@
   "Key": {
     "id": "mock-id"
   },
+  "keys": ["mock-id-1", "mock-id-2"],
   "get": {
     "Item": "mocked-get-response"
+  },
+  "batchGet": {
+    "Items": ["mocked-get-response-1", "mocked-get-response-2"]
   },
   "error": {
     "stack": "mocked-error"
