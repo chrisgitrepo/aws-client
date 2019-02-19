@@ -110,6 +110,22 @@ class DynamoClient {
     })
     return data
   }
+
+  async update({ id, update }) {
+    const params = {
+      TableName : this.tableName,
+      Key: { id },
+      AttributeUpdates: update
+    }
+
+    const data = await new Promise(resolve => {
+      return this.docClient.update(params, (error, data) => {
+        if (error) resolve(errorMessage({ source: DynamoClient.name, error, method: 'update', item: id }))
+        resolve(data)
+      })
+    })
+    return data
+  }
 }
 
 module.exports = DynamoClient
