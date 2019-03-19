@@ -43,7 +43,7 @@ class DynamoClient {
       }
       const response = await new Promise(resolve => {
         return this.docClient.batchGet(params, (error, data) => {
-          if (error) resolve(errorMessage({ source: DynamoClient.name, error, method: 'batchGet', item: ids }))
+          if (error) resolve(errorMessage({ source: DynamoClient.name, error, method: 'batchGet', item: chunk }))
           else resolve(data.Responses[this.tableName])
         })
       })
