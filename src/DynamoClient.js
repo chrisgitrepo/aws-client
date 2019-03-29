@@ -92,14 +92,15 @@ class DynamoClient {
     }
   }
 
-  async query({ id, index }) {
+  async query({ keyName, keyValue, indexName, showColumns }) {
     var params = {
       TableName: this.tableName,
-      IndexName: index,
-      KeyConditionExpression: 'id = :id',
+      IndexName: indexName,
+      KeyConditionExpression: `${keyName} = :keyValue`,
       ExpressionAttributeValues: {
-        ':id': id
-      }
+        ':keyValue': keyValue
+      },
+      ProjectionExpression: showColumns
     }
 
     const data = await new Promise(resolve => {
