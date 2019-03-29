@@ -9,6 +9,9 @@
   "batchGet": {
     "Items": ["mocked-get-response-1", "mocked-get-response-2"]
   },
+  "query": {
+    "Items": ["mocked-get-response-1", "mocked-get-response-2"]
+  },
   "error": {
     "stack": "mocked-error"
   }

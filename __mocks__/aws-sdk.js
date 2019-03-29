@@ -24,6 +24,11 @@ AWS.DynamoDB.DocumentClient = class {
     // if (params.RequestItems.Keys.ids !== ids) return callback(error, null)
     return callback(null, { Responses: { [tableName]: Items } })
   }
+
+  query(params, callback) {
+    const { keys, query: { Items }, error } = data
+    return callback(null, { Items })
+  }
 }
 
 module.exports = AWS
