@@ -104,8 +104,13 @@ class DynamoClient {
     }
 
     if (sortKey && sortOperator && sortValue) {
-      params.KeyConditionExpression = `${KeyConditionExpression} and ${sortKey} ${sortOperator} ${sortKey}`
-      params.ExpressionAttributeValues[`:${sortKey}`] = sortValue
+      let hashedSortKey = sortKey
+      if (sortKey === 'timestamp') {
+        hashedSortKey = `#${sortKey}`
+        params.ExpressionAttributeNames = { [hashedSortKey]: sortKey }
+      }
+      params.KeyConditionExpression = `${KeyConditionExpression} and ${hashedSortKey} ${sortOperator} :sortValue`
+      params.ExpressionAttributeValues[':sortValue'] = sortValue
     }
 
     if (showColumns) {
