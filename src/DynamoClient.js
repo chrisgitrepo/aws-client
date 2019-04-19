@@ -92,15 +92,24 @@ class DynamoClient {
     }
   }
 
-  async query({ keyName, keyValue, indexName, showColumns }) {
-    var params = {
+  async query({ indexName, keyName, keyValue, sortKey, sortOperator, sortValue, showColumns }) {
+    const KeyConditionExpression = `${keyName} = :keyValue`
+    const ExpressionAttributeValues = { ':keyValue': keyValue }
+
+    const params = {
       TableName: this.tableName,
       IndexName: indexName,
-      KeyConditionExpression: `${keyName} = :keyValue`,
-      ExpressionAttributeValues: {
-        ':keyValue': keyValue
-      },
-      ProjectionExpression: showColumns
+      KeyConditionExpression,
+      ExpressionAttributeValues,
+    }
+
+    if (sortKey && sortOperator && sortValue) {
+      params.KeyConditionExpression = `${KeyConditionExpression} and ${sortKey} ${sortOperator} ${sortKey}`
+      params.ExpressionAttributeValues[`:${sortKey}`] = sortValue
+    }
+
+    if (showColumns) {
+      params.ProjectionExpression = showColumns
     }
 
     const data = await new Promise(resolve => {
