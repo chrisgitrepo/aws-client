@@ -5,6 +5,10 @@ const errorMessage = require('./utils/error')
 class SES {
   
   constructor({ region }) {
+    if (process.env.AWS_PROFILE) {
+      const credentials = new AWS.SharedIniFileCredentials({ profile: process.env.AWS_PROFILE });
+      AWS.config.credentials = credentials;
+    }
     this.sesClient = new AWS.SES({
       region,
       apiVersion: '2010-12-01'

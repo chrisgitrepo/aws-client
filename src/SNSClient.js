@@ -3,6 +3,10 @@ const AWS = require('aws-sdk')
 class SNSClient {
 
   constructor({ region, topicArn }) {
+    if (process.env.AWS_PROFILE) {
+      const credentials = new AWS.SharedIniFileCredentials({ profile: process.env.AWS_PROFILE });
+      AWS.config.credentials = credentials;
+    }
     this.snsClient = new AWS.SNS({
       region,
       apiVersion: '2010-03-31'

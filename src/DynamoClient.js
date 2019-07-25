@@ -6,6 +6,10 @@ const errorMessage = require('./utils/error')
 class DynamoClient {
   
   constructor({ region, tableName }) {
+    if (process.env.AWS_PROFILE) {
+      const credentials = new AWS.SharedIniFileCredentials({ profile: process.env.AWS_PROFILE });
+      AWS.config.credentials = credentials;
+    }
     this.docClient = new AWS.DynamoDB.DocumentClient({
       region,
       apiVersion: '2012-08-10'
