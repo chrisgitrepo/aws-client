@@ -16,7 +16,12 @@ class SNSClient {
 
   static extractMessage(event) {
     const { Records: [{ Sns: { Message } }] } = event
-    return JSON.parse(Message)
+    let parsedMsg = undefined
+    try {
+      parsedMsg = JSON.parse(Message)
+    } catch (error) {
+    }
+    return parsedMsg
   }
 
   async publish({ message }) {
