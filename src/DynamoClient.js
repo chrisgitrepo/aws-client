@@ -4,7 +4,7 @@ const R = require('ramda')
 const errorMessage = require('./utils/error')
 
 class DynamoClient {
-  
+
   constructor({ region, tableName }) {
     if (process.env.AWS_PROFILE) {
       const credentials = new AWS.SharedIniFileCredentials({ profile: process.env.AWS_PROFILE });
@@ -19,7 +19,7 @@ class DynamoClient {
 
   async get({ id }) {
     const params = {
-      TableName : this.tableName,
+      TableName: this.tableName,
       Key: { id }
     }
 
@@ -132,9 +132,11 @@ class DynamoClient {
 
   async update({ id, update }) {
     const params = {
-      TableName : this.tableName,
+      TableName: this.tableName,
       Key: { id },
-      AttributeUpdates: update
+      UpdateExpression: `set ${Object.keys(update).reduce((acc, curr) => `${acc}${acc && ','} ${curr} = :${curr}`, '')}`,
+      ExpressionAttributeValues: Object.keys(update).reduce((acc, curr) => ({ ...acc, [`:${curr}`]: update[curr] }), {}),
+      ReturnValues: "UPDATED_NEW"
     }
 
     const data = await new Promise(resolve => {
