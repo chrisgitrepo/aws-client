@@ -86,14 +86,14 @@ class DynamoClient {
           ))
         }
       }
-      const data = await new Promise(resolve => {
+      await new Promise(resolve => {
         return this.docClient.batchWrite(params, (error, data) => {
           if (error) console.error(errorMessage({ source: DynamoClient.name, error, method: 'batchPut', items })) // an error occurred
           resolve(data)
         })
       })
-      return data
     }
+    return {}
   }
 
   async query({ indexName, keyName, keyValue, sortKey, sortOperator, sortValue, showColumns }) {
