@@ -71,18 +71,16 @@ class DynamoClient {
     return data
   }
 
-  async batchPut({ items }) {
+  async batchPut({ items, deleteItems }) {
     const chunkedData = R.splitEvery(25, items)
 
     for (const chunk of chunkedData) {
       const params = {
         RequestItems: {
           [this.tableName]: chunk.map(obj => (
-            {
-              PutRequest: {
-                Item: obj
-              }
-            }
+            deleteItems
+              ? { DeleteRequest: { Key: { id: obj } } }
+              : { PutRequest: { Item: obj } }
           ))
         }
       }
