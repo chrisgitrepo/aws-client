@@ -1,5 +1,5 @@
 const errorMessage = ({ source, error, method, item }) => {
-  const errorMsg = `ERROR in '${source}' function: '${method}'\nStack: ${error.stack}\nItem(s): ${JSON.stringify(item)}`
+  const errorMsg = `ERROR in '${source}' function: '${method}'\nStack: ${error.stack}\nItem(s): ${item && JSON.stringify(item)}`
   console.error(errorMsg)
   return errorMsg
 }
