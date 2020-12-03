@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk')
-const R = require('ramda')
+const splitEvery = require('ramda.splitevery')
 
 const errorMessage = require('./utils/error')
 
@@ -34,7 +34,7 @@ class DynamoClient {
 
   async batchGet({ keyName, keys }) {
     const formattedIds = keys.map(key => ({ [keyName]: key }))
-    const chunkedIds = R.splitEvery(100, formattedIds)
+    const chunkedIds = splitEvery(100, formattedIds)
 
     const data = []
     for (const chunk of chunkedIds) {
@@ -72,7 +72,7 @@ class DynamoClient {
   }
 
   async batchPut({ items, deleteItems }) {
-    const chunkedData = R.splitEvery(25, items)
+    const chunkedData = splitEvery(25, items)
 
     for (const chunk of chunkedData) {
       const params = {
