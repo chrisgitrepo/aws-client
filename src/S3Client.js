@@ -42,6 +42,20 @@ class S3Client {
     })
     return data
   }
+
+  async getObject({ filepath, filetype }) {
+    const params = {
+      Bucket: this.bucketName,
+      Key: `${filepath}.${filetype}`
+    }
+    const data = await new Promise(resolve => {
+      return this.s3Client.getObject(params, (error, data) => {
+        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'getObject' })) // an error occurred
+        resolve(data)
+      })
+    })
+    return data
+  }
 }
 
 module.exports = S3Client
