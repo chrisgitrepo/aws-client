@@ -30,13 +30,20 @@ class S3Client {
   }
 
   async getJSON({ key }) {
+    const formattedKey = key.replace('/', '-')
     const params = {
       Bucket: this.bucketName,
-      Key: `${key.replace('/', '-')}.json`
+      Key: `${formattedKey}.json`
     }
     const data = await new Promise(resolve => {
       return this.s3Client.getObject(params, (error, data) => {
-        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'getJSON' })) // an error occurred
+        if (error) {
+          if (error.message === 'The specified key does not exist.') {
+            console.log(`[${formattedKey}] - ${error.message} Returning empty array...`);
+            return resolve([])
+          }
+          console.error(errorMessage({ source: S3Client.name, error, method: 'getJSON' })) // an error occurred
+        }
         resolve(data)
       })
     })
