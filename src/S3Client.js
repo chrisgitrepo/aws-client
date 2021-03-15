@@ -50,6 +50,22 @@ class S3Client {
     return data
   }
 
+  async putCSV({ key, item }) {
+    const params = {
+      Body: item,
+      Bucket: this.bucketName,
+      Key: `${key.replace('/', '-')}.csv`,
+      ContentType: 'text/csv'
+    }
+    const data = await new Promise(resolve => {
+      return this.s3Client.putObject(params, (error, data) => {
+        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'putCSV', item })) // an error occurred
+        resolve(data)
+      })
+    })
+    return data
+  }
+
   getObjectStream({ filepath, filetype }) {
     const params = {
       Bucket: this.bucketName,
