@@ -73,6 +73,46 @@ class S3Client {
     }
     return this.s3Client.getObject(params).createReadStream();
   }
+
+  async listObjects() {
+    const params = {
+      Bucket: this.bucketName
+    }
+    const data = await new Promise(resolve => {
+      return this.s3Client.listObjects(params, (error, data) => {
+        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'listObjects' })) // an error occurred
+        resolve(data)
+      })
+    })
+    return data.Contents
+  }
+
+
+  async clearBucket() {
+    const allObjects = await this.listObjects()
+
+    if (!allObjects || allObjects.length === 0) {
+      console.log(`[${this.bucketName}] Bucket Contents Empty`);
+      return {}
+    }
+
+    const params = {
+      Bucket: this.bucketName,
+      Delete: {
+        Objects: allObjects.map(obj => ({ Key: obj.Key })),
+        Quiet: false
+      }
+    }
+
+    await new Promise(resolve => {
+      return this.s3Client.deleteObjects(params, (error, data) => {
+        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'deleteObjects' })) // an error occurred
+        resolve(data)
+      })
+    })
+
+    return this.clearBucket()
+  }
 }
 
 module.exports = S3Client
