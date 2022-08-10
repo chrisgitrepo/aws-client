@@ -107,13 +107,14 @@ class S3 {
     return this.s3Client.getObject(params).createReadStream();
   }
 
-  getObjectStreamv2({ filepath, filetype }) {
+  async getObjectStreamv2({ filepath, filetype }) {
     const params = {
       Bucket: this.bucketName,
       Key: `${filepath}.${filetype}`
     }
+    const results = await this.s3Clientv3.send(new GetObjectCommand(params))
 
-    return this.s3Clientv3.send(new GetObjectCommand(params))
+    return results.Body
   }
 
   async listObjects() {
