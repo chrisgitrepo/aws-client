@@ -138,7 +138,7 @@ class S3 {
       const results = await this.s3Clientv3.send(new ListObjectsCommand(params))
       return results.Contents
     } catch (error) {
-      if (error) console.error(errorMessage({ source: S3.name, error, method: 'listObjects' })) // an error occurred
+      console.error(errorMessage({ source: S3.name, error, method: 'listObjects' })) // an error occurred
     }
   }
 
@@ -166,6 +166,32 @@ class S3 {
     })
 
     return this.clearBucket()
+  }
+
+  async clearBucketv2() {
+    const allObjects = await this.listObjectsv2()
+
+    if (!allObjects || allObjects.length === 0) {
+      console.log(`[${this.bucketName}] Bucket Contents Empty`);
+      return {}
+    }
+
+    const params = {
+      Bucket: this.bucketName,
+      Delete: {
+        Objects: allObjects.map(obj => ({ Key: obj.Key })),
+        Quiet: false
+      }
+    }
+
+    try {
+      await this.s3Clientv3.send(new DeleteObjectsCommand(params))
+
+    } catch (error) {
+      console.error(errorMessage({ source: S3.name, error, method: 'deleteObjects' })) // an error occurred
+    }
+
+    return this.clearBucketv2()
   }
 }
 
