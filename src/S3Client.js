@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk')
-const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsCommand, DeleteObjectsCommand } = require('@aws-sdk/client-s3')
 
 const errorMessage = require('./utils/error')
 const stream = require('./utils/stream')
@@ -130,6 +130,17 @@ class S3 {
     return data.Contents
   }
 
+  async listObjectsv2() {
+    const params = {
+      Bucket: this.bucketName
+    }
+    try {
+      const results = await this.s3Clientv3.send(new ListObjectsCommand(params))
+      return results.Contents
+    } catch (error) {
+      if (error) console.error(errorMessage({ source: S3.name, error, method: 'listObjects' })) // an error occurred
+    }
+  }
 
   async clearBucket() {
     const allObjects = await this.listObjects()
