@@ -113,7 +113,7 @@ class S3 {
       Key: `${filepath}.${filetype}`
     }
 
-    return this.s3Clientv3.send(new GetObjectCommand(params)).createReadStream();
+    return this.s3Clientv3.send(new GetObjectCommand(params))
   }
 
   async listObjects() {
