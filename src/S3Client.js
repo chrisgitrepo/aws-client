@@ -40,14 +40,6 @@ class S3 {
     }
     try {
       const results = await this.s3Clientv3.send(new PutObjectCommand(params))
-      console.log(
-        "Successfully created " +
-        params.Key +
-        " and uploaded it to " +
-        params.Bucket +
-        "/" +
-        params.Key
-      );
       return results
     } catch (error) {
       console.error(errorMessage({ source: S3.name, error, method: 'putJSON', item })) // an error occurred
