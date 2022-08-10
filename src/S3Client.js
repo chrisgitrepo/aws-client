@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk')
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
+const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
 
 const errorMessage = require('./utils/error')
 
@@ -30,7 +30,7 @@ class S3 {
     return data
   }
 
-  async putJSONv3({ key, item }) {
+  async putJSONv2({ key, item }) {
     const params = {
       Body: JSON.stringify(item),
       Bucket: this.bucketName,
@@ -48,8 +48,8 @@ class S3 {
         params.Key
       );
       return results
-    } catch (err) {
-      console.error(errorMessage({ source: S3.name, err, method: 'putJSON', item })) // an error occurred
+    } catch (error) {
+      console.error(errorMessage({ source: S3.name, error, method: 'putJSON', item })) // an error occurred
     }
   }
 
@@ -72,6 +72,29 @@ class S3 {
       })
     })
     return data
+  }
+
+  async getJSONv2({ key }) {
+    const formattedKey = key.replace('/', '-')
+    const params = {
+      Bucket: this.bucketName,
+      Key: `${formattedKey}.json`
+    }
+    try {
+      const results = await this.s3Clientv3.send(new GetObjectCommand(params))
+
+      console.log(
+        "Successfully got " +
+        params.Key +
+        " from " +
+        params.Bucket +
+        "/" +
+        params.Key
+      );
+      return results
+    } catch (error) {
+      console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
+    }
   }
 
   async putCSV({ key, item }) {
