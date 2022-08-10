@@ -92,7 +92,8 @@ class S3 {
         "/" +
         params.Key
       );
-      return JSON.parse(stream(results.Body))
+      const rawData = await stream(results.Body)
+      return JSON.parse(rawData)
     } catch (error) {
       console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
     }
