@@ -83,17 +83,9 @@ class S3 {
     }
     try {
       const results = await this.s3Clientv3.send(new GetObjectCommand(params))
-
-      console.log(
-        "Successfully got " +
-        params.Key +
-        " from " +
-        params.Bucket +
-        "/" +
-        params.Key
-      );
       const rawData = await stream(results.Body)
       return JSON.parse(rawData)
+
     } catch (error) {
       console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
     }
