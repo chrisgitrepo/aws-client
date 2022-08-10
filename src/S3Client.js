@@ -2,6 +2,7 @@ const AWS = require('aws-sdk')
 const { S3Client, PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3')
 
 const errorMessage = require('./utils/error')
+const stream = require('./utils/stream')
 
 class S3 {
   constructor({ region, bucketName }) {
@@ -91,7 +92,7 @@ class S3 {
         "/" +
         params.Key
       );
-      return results?.Body
+      return stream(results?.Body)
     } catch (error) {
       console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
     }
