@@ -91,7 +91,7 @@ class S3 {
         "/" +
         params.Key
       );
-      return results?.Body ? JSON.parse(results.Body) : []
+      return results?.Body
     } catch (error) {
       console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
     }
