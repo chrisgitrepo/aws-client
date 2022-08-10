@@ -1,9 +1,9 @@
 const AWS = require('aws-sdk')
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
 
 const errorMessage = require('./utils/error')
 
-class S3Client {
-
+class S3 {
   constructor({ region, bucketName }) {
     if (process.env.AWS_PROFILE) {
       const credentials = new AWS.SharedIniFileCredentials({ profile: process.env.AWS_PROFILE });
@@ -11,6 +11,7 @@ class S3Client {
     }
     this.s3Client = new AWS.S3({ region, apiVersion: '2006-03-01' })
     this.bucketName = bucketName
+    this.s3Clientv3 = new S3Client({ region })
   }
 
   async putJSON({ key, item }) {
@@ -22,11 +23,34 @@ class S3Client {
     }
     const data = await new Promise(resolve => {
       return this.s3Client.putObject(params, (error, data) => {
-        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'putJSON', item })) // an error occurred
+        if (error) console.error(errorMessage({ source: S3.name, error, method: 'putJSON', item })) // an error occurred
         resolve(data)
       })
     })
     return data
+  }
+
+  async putJSONv3({ key, item }) {
+    const params = {
+      Body: JSON.stringify(item),
+      Bucket: this.bucketName,
+      Key: `${key.replace('/', '-')}.json`,
+      ContentType: 'application/json'
+    }
+    try {
+      const results = await this.s3Clientv3.send(new PutObjectCommand(params))
+      console.log(
+        "Successfully created " +
+        params.Key +
+        " and uploaded it to " +
+        params.Bucket +
+        "/" +
+        params.Key
+      );
+      return results
+    } catch (err) {
+      console.error(errorMessage({ source: S3.name, err, method: 'putJSON', item })) // an error occurred
+    }
   }
 
   async getJSON({ key }) {
@@ -42,7 +66,7 @@ class S3Client {
             console.log(`[${formattedKey}] - ${error.message} Returning empty array...`);
             return resolve([])
           }
-          console.error(errorMessage({ source: S3Client.name, error, method: 'getJSON' })) // an error occurred
+          console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
         }
         resolve(data)
       })
@@ -59,7 +83,7 @@ class S3Client {
     }
     const data = await new Promise(resolve => {
       return this.s3Client.putObject(params, (error, data) => {
-        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'putCSV', item })) // an error occurred
+        if (error) console.error(errorMessage({ source: S3.name, error, method: 'putCSV', item })) // an error occurred
         resolve(data)
       })
     })
@@ -80,7 +104,7 @@ class S3Client {
     }
     const data = await new Promise(resolve => {
       return this.s3Client.listObjects(params, (error, data) => {
-        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'listObjects' })) // an error occurred
+        if (error) console.error(errorMessage({ source: S3.name, error, method: 'listObjects' })) // an error occurred
         resolve(data)
       })
     })
@@ -106,7 +130,7 @@ class S3Client {
 
     await new Promise(resolve => {
       return this.s3Client.deleteObjects(params, (error, data) => {
-        if (error) console.error(errorMessage({ source: S3Client.name, error, method: 'deleteObjects' })) // an error occurred
+        if (error) console.error(errorMessage({ source: S3.name, error, method: 'deleteObjects' })) // an error occurred
         resolve(data)
       })
     })
@@ -115,4 +139,4 @@ class S3Client {
   }
 }
 
-module.exports = S3Client
+module.exports = S3
