@@ -79,7 +79,10 @@ class S3 {
       return JSON.parse(rawData)
 
     } catch (error) {
-      console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
+      if (error.message !== 'The specified key does not exist.') {
+        console.error(errorMessage({ source: S3.name, error, method: 'getJSON' })) // an error occurred
+      }
+      return null
     }
   }
 
