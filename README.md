@@ -10,6 +10,12 @@ Currently Supports:
 
 `npm install aws-client`
 
+If you are using any v1 functions (i.e. function name does not end in v2), then you must also install aws-sdk:
+
+`npm install aws-sdk`
+
+aws-client v2 functions do not require any additional imports as this package imports the required modular packages (new AWS SDK v3 feature). Eventually all v1 packages will migrate to aws-client v2
+
 # Import
 
 You can import one or many clients depending on what you need:
