@@ -67,6 +67,22 @@ class S3 {
     }
   }
 
+  async deleteObjects({ keys }) {
+    const params = {
+      Bucket: this.bucketName,
+      Delete: {
+        Objects: keys.map(key => ({ Key: key })),
+        Quiet: false
+      }
+    }
+    try {
+      await this.s3Clientv3.send(new DeleteObjectsCommand(params))
+
+    } catch (error) {
+      console.error(errorMessage({ source: S3.name, error, method: 'deleteObjects' })) // an error occurred
+    }
+  }
+
   async clearBucketv2() {
     const allObjects = await this.listObjectsv2()
 
@@ -75,20 +91,7 @@ class S3 {
       return {}
     }
 
-    const params = {
-      Bucket: this.bucketName,
-      Delete: {
-        Objects: allObjects.map(obj => ({ Key: obj.Key })),
-        Quiet: false
-      }
-    }
-
-    try {
-      await this.s3Clientv3.send(new DeleteObjectsCommand(params))
-
-    } catch (error) {
-      console.error(errorMessage({ source: S3.name, error, method: 'deleteObjects' })) // an error occurred
-    }
+    await deleteObjects({ keys: allObjects.map(obj => obj.Key) })
 
     return this.clearBucketv2()
   }
