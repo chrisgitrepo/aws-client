@@ -53,9 +53,11 @@ class S3 {
     return results.Body
   }
 
-  async listObjectsv2() {
+  async listObjectsv2({ maxKeys, prefix }) {
     const params = {
-      Bucket: this.bucketName
+      Bucket: this.bucketName,
+      MaxKeys: maxKeys,
+      Prefix: prefix,
     }
     try {
       const results = await this.s3Clientv3.send(new ListObjectsCommand(params))
