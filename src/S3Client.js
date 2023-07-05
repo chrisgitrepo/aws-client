@@ -84,14 +84,14 @@ class S3 {
   }
 
   async clearBucketv2() {
-    const allObjects = await this.listObjectsv2()
+    const allObjects = await this.listObjectsv2({})
 
     if (!allObjects || allObjects.length === 0) {
       console.log(`[${this.bucketName}] Bucket Contents Empty`);
       return {}
     }
 
-    await deleteObjects({ keys: allObjects.map(obj => obj.Key) })
+    await this.deleteObjects({ keys: allObjects.map(obj => obj.Key) })
 
     return this.clearBucketv2()
   }
